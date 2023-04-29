@@ -1,64 +1,54 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>CSV File Demo</title>
     <style>
       table {
         border-collapse: collapse;
-        border: 1px solid black;
+        border: 3px solid black;
+        margin: auto;
       }
       th, td {
-        padding: 5px;
-        text-align: left;
+        padding: 10px;
+        text-align: center;
         border: 1px solid black;
       }
       th {
         font-weight: bold;
-        font-size: 1.5em;
+        font-size: 1.2em;
       }
     </style>
   </head>
   <body>
     <h1>CSV File Demo</h1>
-    <table id="csv-table"></table>
-
-    <script>
-      var fileUrl = "https://draylan.github.io/bobbytest.csv"; // change this URL to the location of your CSV file
-
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var csv = xhr.responseText;
-          var lines = csv.split('\n');
-          var table = document.getElementById('csv-table');
-          table.innerHTML = '';
-
-          var headers = lines[0].split(',');
-          var headerRow = document.createElement('tr');
-          for (var h = 0; h < headers.length; h++) {
-            var headerCell = document.createElement('th');
-            headerCell.appendChild(document.createTextNode(headers[h]));
-            headerRow.appendChild(headerCell);
-          }
-          table.appendChild(headerRow);
-
-          for (var i = 1; i < lines.length; i++) {
-            var row = document.createElement('tr');
-            var fields = lines[i].split(',');
-            for (var j = 0; j < fields.length; j++) {
-              var cell = document.createElement('td');
-              cell.appendChild(document.createTextNode(fields[j]));
-              row.appendChild(cell);
+    <table>
+      <thead>
+        <tr>
+          <?php
+            $file = fopen("https://draylan.github.io/bobbytest.csv", "r");
+            $headers = fgetcsv($file);
+            foreach ($headers as $header) {
+              echo "<th style='font-size: 1.5em; font-weight: bold;'>".$header."</th>";
             }
-            table.appendChild(row);
+            fclose($file);
+          ?>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+          $file = fopen("yourfile.csv", "r");
+          fgetcsv($file); // Skip headers
+          while ($row = fgetcsv($file)) {
+            echo "<tr>";
+            foreach ($row as $cell) {
+              echo "<td>".$cell."</td>";
+            }
+            echo "</tr>";
           }
-
-          // Apply table styles
-          table.classList.add('csv-table');
-        }
-      };
-      xhr.open("GET", fileUrl, true);
-      xhr.send();
-    </script>
+          fclose($file);
+        ?>
+      </tbody>
+    </table>
   </body>
 </html>

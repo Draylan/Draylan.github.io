@@ -31,16 +31,7 @@
           var table = document.getElementById('csv-table');
           table.innerHTML = '';
 
-          var headers = lines[0].split(',');
-          var headerRow = document.createElement('tr');
-          for (var h = 0; h < headers.length; h++) {
-            var headerCell = document.createElement('th');
-            headerCell.appendChild(document.createTextNode(headers[h]));
-            headerRow.appendChild(headerCell);
-          }
-          table.appendChild(headerRow);
-
-          for (var i = 1; i < lines.length; i++) {
+          for (var i = 0; i < lines.length; i++) {
             var row = document.createElement('tr');
             var fields = lines[i].split(',');
             for (var j = 0; j < fields.length; j++) {
@@ -50,6 +41,9 @@
             }
             table.appendChild(row);
           }
+
+          // Apply table styles
+          table.classList.add('csv-table');
         }
       };
       xhr.open("GET", fileUrl, true);

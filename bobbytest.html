@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CSV File Demo</title>
+  </head>
+  <body>
+    <h1>CSV File Demo</h1>
+    <table id="csv-table"></table>
+
+    <script>
+      var fileUrl = "https://example.com/data.csv"; // change this URL to the location of your CSV file
+
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var csv = xhr.responseText;
+          var lines = csv.split('\n');
+          var table = document.getElementById('csv-table');
+          table.innerHTML = '';
+
+          for (var i = 0; i < lines.length; i++) {
+            var row = document.createElement('tr');
+            var fields = lines[i].split(',');
+            for (var j = 0; j < fields.length; j++) {
+              var cell = document.createElement('td');
+              cell.appendChild(document.createTextNode(fields[j]));
+              row.appendChild(cell);
+            }
+            table.appendChild(row);
+          }
+        }
+      };
+      xhr.open("GET", fileUrl, true);
+      xhr.send();
+    </script>
+  </body>
+</html>

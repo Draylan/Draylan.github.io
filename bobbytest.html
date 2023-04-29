@@ -2,6 +2,19 @@
 <html>
   <head>
     <title>CSV File Demo</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        border: 1px solid black;
+      }
+      th, td {
+        padding: 5px;
+        text-align: left;
+      }
+      th {
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
     <h1>CSV File Demo</h1>
@@ -18,7 +31,16 @@
           var table = document.getElementById('csv-table');
           table.innerHTML = '';
 
-          for (var i = 0; i < lines.length; i++) {
+          var headers = lines[0].split(',');
+          var headerRow = document.createElement('tr');
+          for (var h = 0; h < headers.length; h++) {
+            var headerCell = document.createElement('th');
+            headerCell.appendChild(document.createTextNode(headers[h]));
+            headerRow.appendChild(headerCell);
+          }
+          table.appendChild(headerRow);
+
+          for (var i = 1; i < lines.length; i++) {
             var row = document.createElement('tr');
             var fields = lines[i].split(',');
             for (var j = 0; j < fields.length; j++) {

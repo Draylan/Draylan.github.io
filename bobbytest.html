@@ -17,36 +17,31 @@
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      // Wait for the document to be ready
       $(document).ready(function() {
-        // Make an AJAX request to retrieve the CSV file
         $.ajax({
-          type: "GET", // Use the HTTP GET method
-          url: "https://draylan.github.io/bobbytest.csv", // URL of the CSV file
-          dataType: "text", // Specify that the response data is plain text
-          success: function(data) { // Callback function to handle the successful response
-            // Split the CSV data into an array of rows
-            var rows = data.split("\n");
+          type: "GET",
+          url: "https://draylan.github.io/bobbytest.csv",
+          dataType: "text",
+          success: function(data) {
+            var rows = data.trim().split("\n"); // remove empty lines at end and split into rows
             var table = "<table>";
-            // Loop through each row of the CSV data
             for (var i = 0; i < rows.length; i++) {
-              // Split the row into an array of cells
               var cells = rows[i].split(",");
-              table += "<tr>";
-              // Loop through each cell of the row
-              for (var j = 0; j < cells.length; j++) {
-                // If this is the first row, use <th> tags for the header cells
-                if (i == 0) {
+              if (i == 0) {
+                table += "<tr>";
+                for (var j = 0; j < cells.length; j++) {
                   table += "<th>" + cells[j] + "</th>";
-                } else {
-                  // Otherwise, use <td> tags for the data cells
+                }
+                table += "</tr>";
+              } else if (cells.length > 0) { // skip empty lines
+                table += "<tr>";
+                for (var j = 0; j < cells.length; j++) {
                   table += "<td>" + cells[j] + "</td>";
                 }
+                table += "</tr>";
               }
-              table += "</tr>";
             }
             table += "</table>";
-            // Insert the HTML table into the <div> with the ID "csvDisplay"
             $("#csvDisplay").html(table);
           }
         });

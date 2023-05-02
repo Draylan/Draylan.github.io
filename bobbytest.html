@@ -1,47 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CSV File Display</title>
+    <title>CSV File Demo</title>
     <style>
       table {
         border-collapse: collapse;
-      }
-      td, th {
         border: 1px solid black;
+      }
+      th, td {
         padding: 5px;
+        text-align: left;
+        border: 1px solid black;
       }
       th {
         font-weight: bold;
-        font-size: 1.2em;
+        font-size: 1.5em;
       }
     </style>
-    <script>
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          var rows = this.responseText.split("\n");
-          var table = "<table>";
-          for (var i = 0; i < rows.length; i++) {
-            var cells = rows[i].split(",");
-            table += "<tr>";
-            for (var j = 0; j < cells.length; j++) {
-              if (i == 0) {
-                table += "<th>" + cells[j] + "</th>";
-              } else {
-                table += "<td>" + cells[j] + "</td>";
-              }
-            }
-            table += "</tr>";
-          }
-          table += "</table>";
-          document.getElementById("csvDisplay").innerHTML = table;
-        }
-      };
-      xhr.open("GET", "https://draylan.github.io/bobbytest.csv", true);
-      xhr.send();
-    </script>
   </head>
   <body>
-    <div id="csvDisplay"></div>
+    <h1>CSV File Demo</h1>
+    <table id="csv-table"></table>
+
+    <script>
+      var fileUrl = "https://draylan.github.io/bobbytest.csv"; // change this URL to the location of your CSV file
+
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var csv = xhr.responseText;
+          var lines = csv.split('\n');
+          var table = document.getElementById('csv-table');
+          table.innerHTML = '';
+
+          for (var i = 0; i < lines.length; i++) {
+            var row = document.createElement('tr');
+            var fields = lines[i].split(',');
+            for (var j = 0; j < fields.length; j++) {
+              var cell = document.createElement('td');
+              cell.appendChild(document.createTextNode(fields[j]));
+              row.appendChild(cell);
+            }
+            table.appendChild(row);
+          }
+
+          // Apply table styles
+          table.classList.add('csv-table');
+        }
+      };
+      xhr.open("GET", fileUrl, true);
+      xhr.send();
+    </script>
   </body>
 </html>

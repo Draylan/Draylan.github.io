@@ -15,33 +15,42 @@
         font-size: 1.2em;
       }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          var rows = this.responseText.split("\n");
-          if (rows[rows.length - 1] == "") {
-            rows.pop();
-          }
-          var table = "<table>";
-          for (var i = 0; i < rows.length; i++) {
-            var cells = rows[i].split(",");
-            table += "<tr>";
-            for (var j = 0; j < cells.length; j++) {
-              if (i == 0) {
-                table += "<th>" + cells[j] + "</th>";
-              } else {
-                table += "<td>" + cells[j] + "</td>";
+      // Wait for the document to be ready
+      $(document).ready(function() {
+        // Make an AJAX request to retrieve the CSV file
+        $.ajax({
+          type: "GET", // Use the HTTP GET method
+          url: "https://example.com/data.csv", // URL of the CSV file
+          dataType: "text", // Specify that the response data is plain text
+          success: function(data) { // Callback function to handle the successful response
+            // Split the CSV data into an array of rows
+            var rows = data.split("\n");
+            var table = "<table>";
+            // Loop through each row of the CSV data
+            for (var i = 0; i < rows.length; i++) {
+              // Split the row into an array of cells
+              var cells = rows[i].split(",");
+              table += "<tr>";
+              // Loop through each cell of the row
+              for (var j = 0; j < cells.length; j++) {
+                // If this is the first row, use <th> tags for the header cells
+                if (i == 0) {
+                  table += "<th>" + cells[j] + "</th>";
+                } else {
+                  // Otherwise, use <td> tags for the data cells
+                  table += "<td>" + cells[j] + "</td>";
+                }
               }
+              table += "</tr>";
             }
-            table += "</tr>";
+            table += "</table>";
+            // Insert the HTML table into the <div> with the ID "csvDisplay"
+            $("#csvDisplay").html(table);
           }
-          table += "</table>";
-          document.getElementById("csvDisplay").innerHTML = table;
-        }
-      };
-      xhr.open("GET", "https://example.com/data.csv", true);
-      xhr.send();
+        });
+      });
     </script>
   </head>
   <body>
